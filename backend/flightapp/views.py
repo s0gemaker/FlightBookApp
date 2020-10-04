@@ -29,7 +29,7 @@ def flight_list(request):
 
     # Add one
     if request.method == 'POST':
-        schedule_data = JSONParser.parser(request)
+        schedule_data = JSONParser().parse(request)
         schedule_serializer = ScheduleSerializer(data=schedule_data)
         if schedule_serializer.is_valid():
             schedule_serializer.save()
@@ -42,9 +42,9 @@ def flight_list(request):
 
 
 @csrf_exempt
-def flight_detail(request, primary_key):
+def flight_detail(request, pk):
     try:
-        schedule = Schedule.objects.get(pk=primary_key)
+        schedule = Schedule.objects.get(pk=pk)
     except Schedule.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
@@ -55,7 +55,7 @@ def flight_detail(request, primary_key):
 
     # Update one record
     if request.method == 'PUT':
-        schedule_data = JSONParser.parser(request)
+        schedule_data = JSONParser().parse(request)
         schedule_serializer = ScheduleSerializer(schedule, data=schedule_data)
         if schedule_serializer.is_valid():
             schedule_serializer.save()
